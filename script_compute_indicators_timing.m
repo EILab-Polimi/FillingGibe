@@ -5,9 +5,8 @@ clear
 
 load data/alternative_timings_dataset.mat
 
-delta = 3600*24;
-lag_g3K = 5;
-lag_KT = 7;
+delta = 3600*24;    % [s/day]
+lag = 16;           % [days] water travel time between gibe and turkana
 qmaxGIII = 10*95;
 effic = 0.88;  
 Nyst = 2;
@@ -25,15 +24,15 @@ inflow_lateral_ = inflow_lateral(ini:fin);
 inflow_turKer_ = inflow_turKer(ini:fin);
 
 %% initialize simulation variables
-v(lag_g3K + lag_KT +1) = 434137000; %  
-h(lag_g3K + lag_KT +1) = interp1(lsv_gibe(3,:), lsv_gibe(1,:), v(lag_g3K + lag_KT +1));
-s(lag_g3K + lag_KT +1) = interp1(lsv_gibe(3,:), lsv_gibe(2,:), v(lag_g3K + lag_KT +1));
-volTurk(lag_g3K + lag_KT +1) = interp1(lsv_Turkana(1,:), lsv_Turkana(3,:),turkana_obs_level(ini+365*7));
-s_T(lag_g3K + lag_KT +1) = interp1(lsv_Turkana(3,:), lsv_Turkana(2,:), volTurk(lag_g3K + lag_KT +1));
+v(lag +1) = 434137000; %  
+h(lag +1) = interp1(lsv_gibe(3,:), lsv_gibe(1,:), v(lag +1));
+s(lag +1) = interp1(lsv_gibe(3,:), lsv_gibe(2,:), v(lag +1));
+volTurk(lag +1) = interp1(lsv_Turkana(1,:), lsv_Turkana(3,:),turkana_obs_level(ini+365*7));
+s_T(lag +1) = interp1(lsv_Turkana(3,:), lsv_Turkana(2,:), volTurk(lag +1));
 delta_inflow = nan(size(volTurk));
 
 %% Gibe III and Turkana simulations
-for i = lag_g3K + lag_KT +1:length(inflow_gibe_) - 1 
+for i = lag +1:length(inflow_gibe_) - 1 
 
     v(i+1) = (v(i) + inflow_gibe_(i+1)*delta - release_gibe(i+1)*delta) - evap_gibe(i+1)*s(i);
     e(i+1) = evap_gibe(i+1)*s(i);
@@ -50,15 +49,15 @@ end
 %% compute objectives
 
 % hydropower
-r_G = release_gibe(lag_g3K + lag_KT +1:365*Nyst); 
-h = h(lag_g3K + lag_KT +1:365*Nyst); 
-q_turb=min(release_gibe(lag_g3K + lag_KT +1:365*Nyst), qmaxGIII);
+r_G = release_gibe(lag +1:365*Nyst); 
+h = h(lag +1:365*Nyst); 
+q_turb=min(release_gibe(lag +1:365*Nyst), qmaxGIII);
 g_hyd_GIII = 24*effic.*9.81.*q_turb.*h./10^3;   % MWh 
 Ghyd(year-2006) = nansum(g_hyd_GIII )/Nyst/1000;  %GWh/year 
 
 % turkana level drop
 l_T = interp1(lsv_Turkana(3,:), lsv_Turkana(1,:), volTurk); 
-DeltaTurk(year-2006) = l_T(end) - l_T(lag_g3K + lag_KT +1);
+DeltaTurk(year-2006) = l_T(end) - l_T(lag +1);
 
 % flood pulse
 [~, idmaxrec] = max(omorateRegime);
@@ -72,13 +71,12 @@ end
 
 
 lab = {'Hydropower production [GWh/y]', 'Final Gibe III level [masl]', 'Turkana level drop [m]', 'Flood pulse [m^3/s]'}; 
+lab_y = {'2007','2008','2009','2010','2011','2012','2013','2014','2015', '2016' };
 ylab = {'GWh/y','masl','m','m^3/s'}; 
 obj = [Ghyd', hend'+660 , DeltaTurk', Grec_m']; % all to be maximized
 
 
 %% plots - all years
-
-lab_y = {'2007','2008','2009','2010','2011','2012','2013','2014','2015', '2016' };
 
 figure;
 subplot(211)
@@ -118,8 +116,9 @@ for i = 1:length(years)
             ylim([0 1200])
         end
     end
-    set(gca, 'FontSize', 12); grid on;
+    set(gca, 'FontSize', 10); grid on;
     title(lab(i))
+    xlim([0.5 4.5 ])
 end
 
 
