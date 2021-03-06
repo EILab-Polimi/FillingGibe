@@ -12,7 +12,8 @@ This code repository contains the the following scripts (along with the data and
 
 ### References
 ```
-Zaniolo, M., M. Giuliani, S. Sinclair, P. Burlando, and A. Castelletti (2021), When timing matters - misdesigned dam filling impacts hydropower sustainability, Nature Communications
+Zaniolo, M., M. Giuliani, S. Sinclair, P. Burlando, and A. Castelletti (2021), When timing matters - misdesigned dam 
+filling impacts hydropower sustainability, Nature Communications
 ```
 
 ----
