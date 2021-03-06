@@ -1,5 +1,4 @@
 # FillingGibe
-Repository of codes developed for the paper "When timing matters - misdesigned dam filling impacts hydropower sustainability"
 
 This code repository contains the the following scripts (along with the data and additional functions necessary to run them):
 
@@ -12,8 +11,9 @@ This code repository contains the the following scripts (along with the data and
 **- script_compute_indicators_timing.m**: Matlab script for computing indicators of alternative filling timings, and generating Figures 3b and Supplementary Figure 6.
 
 ### References
-
+```
 Zaniolo, M., M. Giuliani, S. Sinclair, P. Burlando, and A. Castelletti (2021), When timing matters - misdesigned dam filling impacts hydropower sustainability, Nature Communications
+```
 
 ----
 ### Copyright:
